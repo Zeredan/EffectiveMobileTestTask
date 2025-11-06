@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/common" />
+            <option value="$PROJECT_DIR$/core/database" />
             <option value="$PROJECT_DIR$/core/networking" />
             <option value="$PROJECT_DIR$/core/networking/ktor" />
             <option value="$PROJECT_DIR$/core/networking/retrofit" />
@@ -25,6 +26,7 @@
             <option value="$PROJECT_DIR$/data/courses/impl/remote" />
             <option value="$PROJECT_DIR$/data/courses/impl/remote/ktor" />
             <option value="$PROJECT_DIR$/data/courses/impl/remote/retrofit" />
+            <option value="$PROJECT_DIR$/data/courses/impl/saved" />
             <option value="$PROJECT_DIR$/data/courses/mock" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/courses" />

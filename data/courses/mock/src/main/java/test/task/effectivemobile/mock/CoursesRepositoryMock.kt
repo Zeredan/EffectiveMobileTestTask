@@ -3,6 +3,7 @@ package test.task.effectivemobile.mock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import test.task.effectivemobile.courses.Course
+import test.task.effectivemobile.courses.CoursesResult
 import test.task.effectivemobile.courses.repositories.CoursesRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,16 +20,20 @@ class CoursesRepositoryMock @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun getCoursesAsFlow(): Flow<List<Course>> {
+    override suspend fun updateCourses(courses: List<Course>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getCoursesAsFlow(): Flow<CoursesResult> {
         return flow{
             emit(
-                constList
+                getCourses()
             )
         }
     }
 
-    override suspend fun getCourses(): List<Course> {
-        return constList
+    override suspend fun getCourses(): CoursesResult {
+        return CoursesResult.Retrieved(constList)
     }
 
 

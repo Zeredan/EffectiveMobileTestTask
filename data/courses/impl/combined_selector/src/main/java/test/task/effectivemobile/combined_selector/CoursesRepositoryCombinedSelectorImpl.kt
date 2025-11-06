@@ -7,8 +7,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import test.task.effectivemobile.courses.Course
+import test.task.effectivemobile.courses.CoursesResult
 import test.task.effectivemobile.courses.repositories.CoursesRepository
 import test.task.effectivemobile.ktor.CoursesRepositoryRemoteKtorImpl
 import test.task.effectivemobile.local.CoursesRepositoryLocalImpl
@@ -25,7 +27,7 @@ class CoursesRepositoryCombinedSelectorImpl @Inject constructor(
     private val remoteKtorImpl: CoursesRepositoryRemoteKtorImpl,
     private val remoteRetrofitImpl: CoursesRepositoryRemoteRetrofitImpl
 ) : CoursesRepository {
-    private val resultingCoursesFlow = MutableStateFlow<List<Course>>(emptyList())
+    private val resultingCoursesFlow = MutableStateFlow<CoursesResult?>(null)
     private var currentCollectorJob: Job? = null
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -71,12 +73,24 @@ class CoursesRepositoryCombinedSelectorImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun getCoursesAsFlow(): Flow<List<Course>> {
+    override suspend fun updateCourses(courses: List<Course>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getCoursesAsFlow(): Flow<CoursesResult?> {
         return resultingCoursesFlow
     }
 
-    override suspend fun getCourses(): List<Course> {
-        return resultingCoursesFlow.value
+    override suspend fun getCourses(): CoursesResult {
+        val result = if (settingsRepository.getIsLocalModeAsFlow().first()) {
+            localImpl.getCourses()
+        } else {
+            when (settingsRepository.getPreferredRemoteModeAsFlow().first()) {
+                RemoteMode.KTOR -> remoteKtorImpl.getCourses()
+                RemoteMode.RETROFIT -> remoteRetrofitImpl.getCourses()
+            }
+        }
+        return result
     }
 
 

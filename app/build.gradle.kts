@@ -45,6 +45,12 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature"))
+    implementation(project(":feature:main"))
+    implementation(project(":feature:login"))
+
+    implementation(project(":core:ui"))
+    implementation(project(":domain:settings"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
