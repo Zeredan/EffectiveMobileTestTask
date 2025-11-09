@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import test.task.effectivemobile.database.entities.CourseEntity
@@ -16,12 +17,21 @@ interface CoursesDAO {
     @Query("SELECT * FROM CourseEntity")
     fun getAllCourses(): List<CourseEntity>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCourses(courses: List<CourseEntity>)
+
     @Update
-    fun updateCourses(courses: List<CourseEntity>)
+    suspend fun updateCourses(courses: List<CourseEntity>)
 
     @Query("DELETE FROM CourseEntity")
-    fun clearCourses(): Int
+    suspend fun clearCourses(): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCourse(course: CourseEntity)
+    suspend fun insertCourse(course: CourseEntity)
+
+    @Transaction
+    suspend fun replaceAllCourses(newCourses: List<CourseEntity>) {
+        clearCourses()
+        insertCourses(newCourses)
+    }
 }

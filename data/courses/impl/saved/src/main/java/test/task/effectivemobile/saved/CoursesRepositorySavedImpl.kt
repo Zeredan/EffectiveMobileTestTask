@@ -1,7 +1,10 @@
 package test.task.effectivemobile.saved
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import test.task.effectivemobile.courses.Course
 import test.task.effectivemobile.courses.CoursesResult
 import test.task.effectivemobile.courses.repositories.CoursesRepository
@@ -14,12 +17,16 @@ class CoursesRepositorySavedImpl @Inject constructor(
     private val coursesDAO: CoursesDAO,
 ) : CoursesRepository {
     override suspend fun addNewCourse(course: Course) {
-        coursesDAO.insertCourse(course.toCourseEntity())
+        withContext(Dispatchers.IO) {
+            coursesDAO.insertCourse(course.toCourseEntity())
+        }
     }
 
     override suspend fun updateCourses(courses: List<Course>) {
-        coursesDAO.clearCourses()
-        coursesDAO.updateCourses(courses.map { it.toCourseEntity() })
+        withContext(Dispatchers.IO) {
+            println("CTINST: ${courses.size}")
+            coursesDAO.replaceAllCourses(courses.map { it.toCourseEntity() })
+        }
     }
 
     override fun getCoursesAsFlow(): Flow<CoursesResult?> {
@@ -30,7 +37,7 @@ class CoursesRepositorySavedImpl @Inject constructor(
 
     override suspend fun getCourses(): CoursesResult {
         return try {
-            val lst = coursesDAO.getAllCourses()
+            val lst = withContext(Dispatchers.IO) { coursesDAO.getAllCourses() }
             CoursesResult.Cached(lst.map { it.toCourse() })
         } catch (e: Exception) {
             CoursesResult.Error(e.message ?: "Unknown error")

@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.DisposableEffectResult
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -98,18 +99,10 @@ fun NavigationMenu(
 
     val navBarColor = colorResource(colorScheme.mainBgElement).toArgb()
 
-    DisposableEffect(navBarColor) {
+    LaunchedEffect(navBarColor) {
         val window = context.window
-        val decorView = window.decorView
-        val previousNavBarColor = window.navigationBarColor
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.navigationBarColor = navBarColor
-        val insetsController = WindowInsetsControllerCompat(window, decorView)
-        insetsController.isAppearanceLightNavigationBars = false
-        onDispose {
-            window.navigationBarColor = previousNavBarColor
-            WindowCompat.setDecorFitsSystemWindows(window, true)
-        }
     }
 
     Row(
@@ -124,7 +117,7 @@ fun NavigationMenu(
             active = activeItem == 0,
             text = stringResource(R.string.main),
             activeImage = iconScheme.iconHouseActive,
-            inactiveImage = iconScheme.iconHouseActive,
+            inactiveImage = iconScheme.iconHouseInactive,
             onClick = {
                 onSelect(0)
             }

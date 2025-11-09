@@ -32,7 +32,7 @@ class RetrofitHiltModule {
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://")
+            .baseUrl("https://drive.usercontent.google.com/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -1,6 +1,6 @@
 [versions]
 hiltAndroidGradlePlugin = "2.51.1"
-agp = "8.12.3"
+agp = "8.7.3"
 kotlin = "2.0.0"
 appcompat = "1.7.1"
 kotlinxMetadataJvm = "0.6.0"

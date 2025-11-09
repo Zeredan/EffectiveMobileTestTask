@@ -24,7 +24,7 @@ class DatabaseRoomHiltModule {
         return Room.databaseBuilder(
             appContext,
             EffectiveMobileDatabase::class.java,
-            "characters_database"
+            "courses_database"
         ).build()
     }
 

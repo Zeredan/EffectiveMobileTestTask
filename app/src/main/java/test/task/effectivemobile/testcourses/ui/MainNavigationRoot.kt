@@ -30,7 +30,11 @@ import test.task.effectivemobile.login.AuthState
 import test.task.effectivemobile.login.LogInViewModel
 import test.task.effectivemobile.login.ui.LogInFeatureRoot
 import test.task.effectivemobile.main.MainViewModel
+import test.task.effectivemobile.favorites.FavoritesViewModel
+import test.task.effectivemobile.account.AccountViewModel
 import test.task.effectivemobile.main.ui.MainFeatureRoot
+import test.task.effectivemobile.favorites.ui.FavoritesFeatureRoot
+import test.task.effectivemobile.account.ui.AccountFeatureRoot
 import test.task.effectivemobile.settings.SettingsViewModel
 import test.task.effectivemobile.ui.themes.EffectiveMobileThemeManager
 import java.util.Locale
@@ -43,8 +47,9 @@ fun MainNavigationRoot(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
-    // Создаю вьюмодели тут, а не внутри фичи - для предотвращения мерцания UI
+    // Создаю вьюмодели тут, а не внутри фичи - для предотвращения мерцания UI и пре-расчетов
     val mainViewModel: MainViewModel = hiltViewModel()
+    val favoritesViewModel: FavoritesViewModel = hiltViewModel()
     val settingsViewModel: SettingsViewModel = hiltViewModel()
     val logInViewModel: LogInViewModel = hiltViewModel()
     val colorScheme by EffectiveMobileThemeManager.colorScheme.collectAsState()
@@ -75,7 +80,11 @@ fun MainNavigationRoot(
                     logInViewModel.authState.first{ it !is AuthState.Loading }
                     navController.navigate(
                         if (logInViewModel.authState.value is AuthState.Success) ScreenState.MAIN else ScreenState.LOGIN
-                    )
+                    ) {
+                        popUpTo(ScreenState.SPLASH) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }
@@ -83,7 +92,11 @@ fun MainNavigationRoot(
             LogInFeatureRoot(
                 vm = logInViewModel,
                 onLoggedIn = {
-                    navController.navigate(ScreenState.MAIN)
+                    navController.navigate(ScreenState.MAIN) {
+                        popUpTo(ScreenState.MAIN) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -92,34 +105,58 @@ fun MainNavigationRoot(
             MainFeatureRoot(
                 vm = mainViewModel,
                 navigateToFavorite = {
-                    navController.navigate(ScreenState.FAVORITES)
+                    navController.navigate(ScreenState.FAVORITES) {
+                        popUpTo(ScreenState.MAIN)
+                    }
                 },
                 navigateToAccount = {
-                    navController.navigate(ScreenState.ACCOUNT)
+                    navController.navigate(ScreenState.ACCOUNT) {
+                        popUpTo(ScreenState.MAIN)
+                    }
+                },
+                onCourseClick = { course ->
+
                 }
             )
         }
 
         composable(ScreenState.FAVORITES) {
-            MainFeatureRoot(
-                vm = mainViewModel,
-                navigateToFavorite = {
-                    navController.navigate(ScreenState.FAVORITES)
+            FavoritesFeatureRoot(
+                vm = favoritesViewModel,
+                navigateToMain = {
+                    navController.navigate(ScreenState.MAIN) {
+                        popUpTo(ScreenState.MAIN) {
+                            inclusive = true
+                        }
+                    }
                 },
                 navigateToAccount = {
-                    navController.navigate(ScreenState.ACCOUNT)
+                    navController.navigate(ScreenState.ACCOUNT) {
+                        popUpTo(ScreenState.MAIN)
+                    }
+                },
+                onCourseClick = { course ->
+
                 }
             )
         }
 
         composable(ScreenState.ACCOUNT) {
-            MainFeatureRoot(
-                vm = mainViewModel,
-                navigateToFavorite = {
-                    navController.navigate(ScreenState.FAVORITES)
+            AccountFeatureRoot(
+                navigateToMain = {
+                    navController.navigate(ScreenState.MAIN) {
+                        popUpTo(ScreenState.MAIN) {
+                            inclusive = true
+                        }
+                    }
                 },
-                navigateToAccount = {
-                    navController.navigate(ScreenState.ACCOUNT)
+                navigateToFavorites = {
+                    navController.navigate(ScreenState.FAVORITES) {
+                        popUpTo(ScreenState.MAIN)
+                    }
+                },
+                onCourseClick = { course ->
+
                 }
             )
         }

@@ -23,9 +23,10 @@ interface FavoriteCoursesDAO {
     @Update
     fun updateCourses(courseIds: List<FavoriteCourseEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertFavoriteCourse(courseIdEntity: FavoriteCourseEntity)
+
     @Query("DELETE FROM FavoriteCourseEntity")
     fun clearCourses(): Int
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertFavoriteCourse(courseIdEntity: FavoriteCourseEntity)
 }

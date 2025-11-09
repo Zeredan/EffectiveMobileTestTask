@@ -1,5 +1,6 @@
 package test.task.effectivemobile.main.ui
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -32,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import test.task.effectivemobile.courses.Course
 import test.task.effectivemobile.courses.CoursesResult
 import test.task.effectivemobile.main.MainViewModel
 import test.task.effectivemobile.ui.composables.NavigationMenu
@@ -47,6 +50,7 @@ fun MainFeatureRoot(
     vm: MainViewModel,
     navigateToFavorite: () -> Unit,
     navigateToAccount: () -> Unit,
+    onCourseClick: (Course) -> Unit
 ) {
     val context = LocalContext.current
     val colorScheme by EffectiveMobileThemeManager.colorScheme.collectAsState()
@@ -54,13 +58,7 @@ fun MainFeatureRoot(
     val robotoFontFamily = EffectiveMobileThemeManager.RobotoFontFamily()
 
     val searchText by vm.searchText.collectAsState()
-    val courses by vm.courses.collectAsState()
-    val coursesList = when(courses) {
-        null -> emptyList()
-        is CoursesResult.Retrieved -> (courses as CoursesResult.Retrieved).courses
-        is CoursesResult.Cached -> (courses as CoursesResult.Cached).courses
-        is CoursesResult.Error -> emptyList()
-    }
+    val coursesList by vm.resultingCourses.collectAsState()
     Column(
         modifier = modifier
             .fillMaxSize(),
@@ -101,17 +99,22 @@ fun MainFeatureRoot(
                     )
                 }
             }
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(11.dp))
             Row(
                 modifier = Modifier
-                    .align(Alignment.End),
+                    .align(Alignment.End)
+                    .clip(RoundedCornerShape(5.dp))
+                    .padding(5.dp)
+                    .clickable {
+                        vm.toggleSortMode()
+                    },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
                     text = stringResource(R.string.by_date),
                     fontSize = 15.sp,
-                    color = colorResource(colorScheme.textTextField),
+                    color = colorResource(colorScheme.mainTextSpecial),
                     fontFamily = robotoFontFamily,
                     fontWeight = FontWeight.W500
                 )
@@ -121,16 +124,16 @@ fun MainFeatureRoot(
                     contentDescription = null
                 )
             }
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(11.dp))
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(coursesList) { course ->
                     RTR(
-                        imageURL = URL("https://game-tournaments.com/media/news/n24430.jpeg"),
+                        imageURL = Uri.parse("https://game-tournaments.com/media/news/n24430.jpeg"),
                         title = course.title,
                         text = course.text,
                         price = course.price,
@@ -138,10 +141,16 @@ fun MainFeatureRoot(
                         startDate = course.startDate,
                         hasLike = course.hasLike,
                         publishDate = course.publishDate,
-                        onClick = { 
-                            
+                        onClick = {
+                            onCourseClick(course)
+                        },
+                        onFavoriteClick = {
+                            if (!course.hasLike) vm.addToFavorites(course.id) else vm.removeFromFavorites(course.id)
                         }
                     )
+                }
+                item{
+                    Spacer(Modifier.height(16.dp))
                 }
             }
         }

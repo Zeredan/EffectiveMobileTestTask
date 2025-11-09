@@ -51,11 +51,14 @@ dependencies {
     implementation(project(":feature:main"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:login"))
+    implementation(project(":feature:favorites"))
+    implementation(project(":feature:account"))
 
     implementation(project(":domain:settings"))
 
     implementation(project(":data:settings:impl"))
     implementation(project(":data:courses:impl"))
+    implementation(project(":data:courses_favorite:impl"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

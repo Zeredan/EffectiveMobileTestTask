@@ -28,9 +28,13 @@ class CoursesRepositoryImpl @Inject constructor(
             coursesCombinedSelectorRepository.getCoursesAsFlow(),
             savedCoursesRepository.getCoursesAsFlow()
         ) { combinedResult, localResult ->
+            println("FBT1: ${combinedResult?.javaClass?.simpleName ?: "null"} ${localResult?.javaClass?.simpleName ?: "null"}")
+            localResult?.let{println("FBT2: localResult: ${(it as CoursesResult.Cached).courses}")}
             when (combinedResult) {
                 is CoursesResult.Retrieved -> {
-                    savedCoursesRepository.updateCourses(combinedResult.courses)
+                    println("FBT3: ${combinedResult.courses.size} ${(localResult as CoursesResult.Cached).courses.size}")
+                    println("FBT4: ${combinedResult.courses == localResult.courses}")
+                    if (combinedResult.courses != localResult.courses) savedCoursesRepository.updateCourses(combinedResult.courses)
                     combinedResult
                 }
 

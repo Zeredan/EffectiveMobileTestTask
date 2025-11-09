@@ -1,11 +1,11 @@
 package test.task.effectivemobile.ui.composables
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,15 +16,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlurEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RenderEffect
+import androidx.compose.ui.graphics.Shader
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,14 +40,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.primex.core.ExperimentalToolkitApi
+import com.primex.core.blur.legacyBackgroundBlur
 import test.task.effectivemobile.ui.R
 import test.task.effectivemobile.ui.themes.EffectiveMobileThemeManager
-import java.net.URL
 
+@OptIn(ExperimentalToolkitApi::class)
 @Composable
 fun RTR(
     modifier: Modifier = Modifier,
-    imageURL: URL,
+    imageURL: Uri,
     title: String,
     text: String,
     price: String,
@@ -48,7 +57,8 @@ fun RTR(
     startDate: String,
     hasLike: Boolean,
     publishDate: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onFavoriteClick: () -> Unit
 ) {
     val robotoFontFamily = EffectiveMobileThemeManager.RobotoFontFamily()
     val colorScheme by EffectiveMobileThemeManager.colorScheme.collectAsState()
@@ -70,21 +80,22 @@ fun RTR(
                 modifier = Modifier
                     .fillMaxSize(),
                 model = imageURL,
+                contentScale = ContentScale.FillWidth,
                 contentDescription = null,
             )
             Box(
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
                     .padding(8.dp)
+                    .align(Alignment.TopEnd)
                     .size(28.dp)
                     .clip(CircleShape)
-                    /*.graphicsLayer {
-                        renderEffect = RenderEffect.createBlurEffect(
-                            radius, radius, Shader.TileMode.CLAMP
-                        )
-                    }*/
-                    .background(colorResource(colorScheme.mainBgElement)),
-                //.blur or something,
+                    .clickable {
+                        onFavoriteClick()
+                    }
+                    .background(colorResource(colorScheme.blurredBg)),
+                    /*.legacyBackgroundBlur(
+                        radius = 20f
+                    ),*/
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -92,7 +103,6 @@ fun RTR(
                     contentDescription = null,
                     modifier = Modifier
                         .size(16.dp)
-                        .align(Alignment.TopStart)
                 )
             }
             Row(
@@ -105,6 +115,8 @@ fun RTR(
                 Row(
                     modifier = Modifier
                         .height(22.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(colorResource(colorScheme.blurredBg))
                         .padding(horizontal = 6.dp, vertical = 5.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -116,7 +128,7 @@ fun RTR(
                             .size(12.dp)
                     )
                     Text(
-                        text = price,
+                        text = rate,
                         fontSize = 12.sp,
                         lineHeight = 14.sp,
                         color = colorResource(colorScheme.textPrimary),
@@ -127,6 +139,8 @@ fun RTR(
                 Box(
                     modifier = Modifier
                         .height(22.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(colorResource(colorScheme.blurredBg))
                         .padding(horizontal = 6.dp, vertical = 5.dp)
                 ) {
                     Text(
@@ -171,7 +185,7 @@ fun RTR(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = text,
+                    text = "$price ₽",
                     fontSize = 16.sp,
                     lineHeight = 18.sp,
                     color = colorResource(colorScheme.textPrimary),
@@ -187,7 +201,7 @@ fun RTR(
                         text = stringResource(R.string.details),
                         fontSize = 12.sp,
                         lineHeight = 16.sp,
-                        color = colorResource(colorScheme.textTextField),
+                        color = colorResource(colorScheme.mainTextSpecial),
                         fontFamily = robotoFontFamily,
                         fontWeight = FontWeight.W500,
                         maxLines = 2,

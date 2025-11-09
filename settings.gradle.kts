@@ -16,6 +16,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://jitpack.io")
     }
 }
 
@@ -53,3 +54,5 @@ include(":domain:courses_favorite")
 include(":data:courses_favorite")
 include(":data:courses_favorite:impl")
 include(":data:courses_favorite:mock")
+include(":feature:favorites")
+include(":feature:account")

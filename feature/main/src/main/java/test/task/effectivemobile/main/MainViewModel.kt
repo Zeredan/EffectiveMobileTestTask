@@ -6,8 +6,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import test.task.effectivemobile.courses.CoursesResult
 import test.task.effectivemobile.courses.repositories.CoursesRepository
 import test.task.effectivemobile.courses.usecases.UCGetCoursesAsFlow
 import test.task.effectivemobile.courses_favorite.repositories.repositories.FavoriteCoursesRepository
@@ -26,6 +29,34 @@ class MainViewModel @Inject constructor(
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
+
+    private val _coursesSortAscendingMode: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val coursesSortAscendingMode = _coursesSortAscendingMode.asStateFlow()
+
+    val resultingCourses = courses
+        .combine(searchText) { courses, searchText ->
+            when(courses) {
+                null, is CoursesResult.Error -> emptyList()
+                is CoursesResult.Cached -> courses.courses
+                is CoursesResult.Retrieved -> courses.courses
+            }.filter { course -> course.title.contains(searchText, ignoreCase = true) }
+        }
+        .combine(coursesSortAscendingMode) { unsortedCourses, sortAscendingMode ->
+            sortAscendingMode?.let {
+                if (it) unsortedCourses.sortedBy { course -> course.publishDate }
+                else unsortedCourses.sortedByDescending { course -> course.publishDate }
+            } ?: unsortedCourses
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    fun toggleSortMode() {
+        _coursesSortAscendingMode.value =
+            when(_coursesSortAscendingMode.value) {
+                null -> true
+                true -> false
+                false -> true
+            }
+    }
 
     fun setSearchText(text: String) {
         _searchText.value = text

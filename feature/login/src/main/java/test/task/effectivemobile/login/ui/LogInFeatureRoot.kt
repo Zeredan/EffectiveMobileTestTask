@@ -88,7 +88,7 @@ fun LogInFeatureRoot(
                     strokeCap = StrokeCap.Round
                 )
             }
-        } else {
+        } else if (authState is AuthState.NeedAuth) {
             Spacer(Modifier.weight(1f))
             Text(
                 modifier = Modifier.align(Alignment.Start),
