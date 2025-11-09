@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/common" />
             <option value="$PROJECT_DIR$/core/database" />
+            <option value="$PROJECT_DIR$/core/datastore" />
             <option value="$PROJECT_DIR$/core/networking" />
             <option value="$PROJECT_DIR$/core/networking/ktor" />
             <option value="$PROJECT_DIR$/core/networking/retrofit" />
@@ -28,12 +29,20 @@
             <option value="$PROJECT_DIR$/data/courses/impl/remote/retrofit" />
             <option value="$PROJECT_DIR$/data/courses/impl/saved" />
             <option value="$PROJECT_DIR$/data/courses/mock" />
+            <option value="$PROJECT_DIR$/data/courses_favorite" />
+            <option value="$PROJECT_DIR$/data/courses_favorite/impl" />
+            <option value="$PROJECT_DIR$/data/courses_favorite/mock" />
+            <option value="$PROJECT_DIR$/data/settings" />
+            <option value="$PROJECT_DIR$/data/settings/impl" />
+            <option value="$PROJECT_DIR$/data/settings/mock" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/courses" />
+            <option value="$PROJECT_DIR$/domain/courses_favorite" />
             <option value="$PROJECT_DIR$/domain/settings" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/login" />
             <option value="$PROJECT_DIR$/feature/main" />
+            <option value="$PROJECT_DIR$/feature/settings" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

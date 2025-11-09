@@ -10,12 +10,12 @@ plugins {
 
 android {
     namespace = "test.task.effectivemobile.testcourses"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "test.task.effectivemobile.testcourses"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -45,12 +45,17 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:ui"))
+
     implementation(project(":feature"))
     implementation(project(":feature:main"))
+    implementation(project(":feature:settings"))
     implementation(project(":feature:login"))
 
-    implementation(project(":core:ui"))
     implementation(project(":domain:settings"))
+
+    implementation(project(":data:settings:impl"))
+    implementation(project(":data:courses:impl"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -61,6 +66,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.appcompat)
+    implementation(project(":feature:settings"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

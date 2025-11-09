@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -25,7 +26,12 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import test.task.effectivemobile.login.AuthState
+import test.task.effectivemobile.login.LogInViewModel
+import test.task.effectivemobile.login.ui.LogInFeatureRoot
 import test.task.effectivemobile.main.MainViewModel
+import test.task.effectivemobile.main.ui.MainFeatureRoot
+import test.task.effectivemobile.settings.SettingsViewModel
 import test.task.effectivemobile.ui.themes.EffectiveMobileThemeManager
 import java.util.Locale
 
@@ -37,8 +43,10 @@ fun MainNavigationRoot(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
+    // Создаю вьюмодели тут, а не внутри фичи - для предотвращения мерцания UI
     val mainViewModel: MainViewModel = hiltViewModel()
     val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val logInViewModel: LogInViewModel = hiltViewModel()
     val colorScheme by EffectiveMobileThemeManager.colorScheme.collectAsState()
 
     //val selectedLanguage by settingsViewModel.selectedLanguageStateFlow.collectAsState()
@@ -59,109 +67,59 @@ fun MainNavigationRoot(
             fadeOut(tween(0))
         }
     ) {
+        // не реализовываю сам экран, только функционал с выжиданием
         composable(ScreenState.SPLASH) {
-            selectedLanguage?.let { it1 ->
-                applySelectedLanguage(
-                    activity = activity,
-                    lang = it1
-                )
+            LaunchedEffect(1) {
+                coroutineScope.launch {
+                    deferredsToWait.forEach { it.await() }
+                    logInViewModel.authState.first{ it !is AuthState.Loading }
+                    navController.navigate(
+                        if (logInViewModel.authState.value is AuthState.Success) ScreenState.MAIN else ScreenState.LOGIN
+                    )
+                }
             }
-            SplashFeatureRoot(
-                jobsToWait = remember {
-                    emptyList()
-                },
-                isDarkMode = isDarkMode,
-                deferredsToWait = remember {
-                    listOf(
-                        coroutineScope.async {
-                            mainViewModel.isLoading.first { !it }
-                        }
-                    ) + deferredsToWait
-                },
-                onSuccess = {
-                    coroutineScope.launch {
-                        navController.navigate(ScreenState.MAIN) {
-                            popUpTo(ScreenState.SPLASH) {
-                                inclusive = true
-                            }
-                        }
-                    }
-                },
-                onError = {
-                    navController.navigate(ScreenState.MAIN) {
-                        popUpTo(ScreenState.SPLASH) {
-                            inclusive = true
-                        }
-                    }
+        }
+        composable(ScreenState.LOGIN){
+            LogInFeatureRoot(
+                vm = logInViewModel,
+                onLoggedIn = {
+                    navController.navigate(ScreenState.MAIN)
                 }
             )
         }
+
         composable(ScreenState.MAIN) {
-            selectedLanguage?.let { it1 ->
-                applySelectedLanguage(
-                    activity = activity,
-                    lang = it1
-                )
-            }
             MainFeatureRoot(
                 vm = mainViewModel,
-                isDarkMode = isDarkMode,
-                onSettingsClicked = {
-                    navController.navigate(ScreenState.SETTINGS)
+                navigateToFavorite = {
+                    navController.navigate(ScreenState.FAVORITES)
                 },
-                onCharacterClicked = {
-                    navController.navigate("${ScreenState.CHARACTER}/$it")
+                navigateToAccount = {
+                    navController.navigate(ScreenState.ACCOUNT)
                 }
             )
         }
-        composable(
-            route = "${ScreenState.CHARACTER}/{characterId}",
-        ) { backStackEntry ->
-            val characterId = backStackEntry.arguments?.getString("characterId")?.toIntOrNull() ?: 1
-            CharacterFeatureRoot(
-                id = characterId,
-                isDarkMode = isDarkMode,
-                onBack = {
-                    navController.navigateUp()
+
+        composable(ScreenState.FAVORITES) {
+            MainFeatureRoot(
+                vm = mainViewModel,
+                navigateToFavorite = {
+                    navController.navigate(ScreenState.FAVORITES)
+                },
+                navigateToAccount = {
+                    navController.navigate(ScreenState.ACCOUNT)
                 }
             )
         }
-        composable(ScreenState.SETTINGS) {
-            selectedLanguage?.let { it1 ->
-                applySelectedLanguage(
-                    activity = activity,
-                    lang = it1
-                )
-            }
-            SettingsFeatureRoot(
-                vm = settingsViewModel,
-                isDarkMode = isDarkMode,
-                onBack = {
-                    navController.navigateUp()
+
+        composable(ScreenState.ACCOUNT) {
+            MainFeatureRoot(
+                vm = mainViewModel,
+                navigateToFavorite = {
+                    navController.navigate(ScreenState.FAVORITES)
                 },
-                onLangClicked = {
-                    navController.navigate(ScreenState.LANGUAGE)
-                }
-            )
-        }
-        composable(ScreenState.LANGUAGE) {
-            selectedLanguage?.let { it1 ->
-                applySelectedLanguage(
-                    activity = activity,
-                    lang = it1
-                )
-            }
-            LanguageFeatureRoot(
-                isDarkMode = isDarkMode,
-                onBack = {
-                    navController.navigateUp()
-                },
-                onOkay = {
-                    navController.navigate(ScreenState.MAIN) {
-                        popUpTo(ScreenState.MAIN) {
-                            inclusive = true
-                        }
-                    }
+                navigateToAccount = {
+                    navController.navigate(ScreenState.ACCOUNT)
                 }
             )
         }

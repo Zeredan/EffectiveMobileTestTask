@@ -20,7 +20,8 @@ enum class EMIconScheme(
     @DrawableRes val iconProfileActive: Int,
     @DrawableRes val iconProfileInactive: Int,
     @DrawableRes val iconSearch: Int,
-    @DrawableRes val iconVk: Int
+    @DrawableRes val iconVk: Int,
+    @DrawableRes val iconStar: Int
 ) {
     DARK(
         iconActiveFavorite = R.drawable.dark_active_favorite,
@@ -32,13 +33,14 @@ enum class EMIconScheme(
         iconFavoriteMenuInactive = R.drawable.dark_favorite_menu_inactive,
         iconFilters = R.drawable.dark_filters,
         iconForwardMiniArrow = R.drawable.dark_forward_mini_arrow,
-        iconHouseActive = R.drawable.dark_house_active,
-        iconHouseInactive = R.drawable.dark_house_inactive,
+        iconHouseActive = R.drawable.dark_home_active,
+        iconHouseInactive = R.drawable.dark_home_inactive,
         iconMiniFavorite = R.drawable.dark_mini_favorite,
         iconOdnokl = R.drawable.dark_odnokl,
-        iconProfileActive = R.drawable.dark_profile_active,
-        iconProfileInactive = R.drawable.dark_profile_inactive,
+        iconProfileActive = R.drawable.dark_account_active,
+        iconProfileInactive = R.drawable.dark_account_inactive,
         iconSearch = R.drawable.dark_search,
-        iconVk = R.drawable.dark_vk
+        iconVk = R.drawable.dark_vk,
+        iconStar = R.drawable.dark_star
     )
 }

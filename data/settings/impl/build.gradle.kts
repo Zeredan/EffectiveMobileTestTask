@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "test.task.effectivemobile.impl"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -39,6 +39,7 @@ android {
 dependencies {
     implementation(project(":domain:settings"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:ui"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

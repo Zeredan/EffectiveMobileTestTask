@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "test.task.effectivemobile.data"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24

@@ -5,10 +5,13 @@
     <color name="dark_login_bg_textfield">#32333A</color>
     <color name="dark_text_textfield">#7A7B7F</color>
     <color name="dark_login_login">#12B956</color>
+    <color name="dark_login_login_disabled">#124012</color>
     <color name="dark_vk_background">#2683ED</color>
     <color name="dark_odnokl_lb_background">#F95D00</color>
     <color name="dark_odnokl_rt_background">#F98509</color>
     <color name="dark_img_background">#F2F2F3</color>
     <color name="dark_main_bg_element">#24252A</color>
     <color name="dark_main_text_special">#12B956</color>
+    <color name="dark_horizontal_divider">#4D555E</color>
+    <color name="dark_blurred_glass">#32333A4D</color>
 </resources>

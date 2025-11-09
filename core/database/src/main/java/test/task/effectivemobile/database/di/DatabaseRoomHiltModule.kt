@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import test.task.effectivemobile.database.EffectiveMobileDatabase
 import test.task.effectivemobile.database.dao.CoursesDAO
+import test.task.effectivemobile.database.dao.FavoriteCoursesDAO
 import javax.inject.Singleton
 
 @Module
@@ -33,5 +34,13 @@ class DatabaseRoomHiltModule {
         database: EffectiveMobileDatabase
     ) : CoursesDAO {
         return database.coursesDao
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteCoursesDAO(
+        database: EffectiveMobileDatabase
+    ) : FavoriteCoursesDAO {
+        return database.favoriteCoursesDao
     }
 }

@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "test.task.effectivemobile.main"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -34,10 +34,16 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
+    implementation(project(":feature"))
+    implementation(project(":core:ui"))
     implementation(project(":domain:courses"))
+    implementation(project(":domain:courses_favorite"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -56,11 +62,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(libs.firebase.config)
-    implementation(libs.firebase.messaging)
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
 
     implementation("androidx.navigation:navigation-compose:2.8.5")
     implementation("com.google.dagger:hilt-android:2.51.1")

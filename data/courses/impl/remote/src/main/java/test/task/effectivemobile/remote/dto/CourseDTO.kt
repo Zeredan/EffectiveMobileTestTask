@@ -2,6 +2,7 @@ package test.task.effectivemobile.remote.dto
 
 import test.task.effectivemobile.courses.Course
 
+
 class CourseDTO(
     val id: Int,
     val title: String,

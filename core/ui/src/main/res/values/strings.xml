@@ -1,2 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="log_in">Вход</string>
+    <string name="email">Email</string>
+    <string name="email_placeholder">example@gmail.com</string>
+    <string name="password">Пароль</string>
+    <string name="password_placeholder">Введите пароль</string>
+    <string name="no_account">Нет аккаунта?</string>
+    <string name="registration">Регистрация</string>
+    <string name="forgot_pwd">Забыли пароль?</string>
+    <string name="search_courses_placeholder">Search courses...</string>
+    <string name="by_date">По дате добавления</string>
+    <string name="details">Подробнее</string>
+    <string name="main">Главная</string>
+    <string name="favorite">Избранное</string>
+    <string name="account">Аккаунт</string>
+</resources>

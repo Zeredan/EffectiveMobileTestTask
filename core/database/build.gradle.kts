@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "test.task.effectivemobile.database"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -49,9 +49,10 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     kapt("com.google.dagger:hilt-compiler:2.51.1")
 
-    implementation("androidx.room:room-runtime:2.7.2")
-    implementation("androidx.room:room-ktx:2.7.2")
-    kapt("androidx.room:room-compiler:2.6.1")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+    kapt(libs.kotlinx.metadata.jvm)
 
     implementation("com.google.code.gson:gson:2.13.1")
 }

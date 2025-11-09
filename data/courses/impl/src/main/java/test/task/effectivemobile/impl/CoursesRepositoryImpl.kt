@@ -1,17 +1,19 @@
 package test.task.effectivemobile.impl
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import test.task.effectivemobile.combined_selector.CoursesRepositoryCombinedSelectorImpl
 import test.task.effectivemobile.courses.Course
 import test.task.effectivemobile.courses.CoursesResult
 import test.task.effectivemobile.courses.repositories.CoursesRepository
+import test.task.effectivemobile.courses_favorite.repositories.repositories.FavoriteCoursesRepository
 import test.task.effectivemobile.saved.CoursesRepositorySavedImpl
 import javax.inject.Inject
 
 class CoursesRepositoryImpl @Inject constructor(
     private val coursesCombinedSelectorRepository: CoursesRepositoryCombinedSelectorImpl,
-    private val savedCoursesRepository: CoursesRepositorySavedImpl
+    private val savedCoursesRepository: CoursesRepositorySavedImpl,
+    private val favoriteCoursesRepository: FavoriteCoursesRepository
 ) : CoursesRepository {
     override suspend fun addNewCourse(course: Course) {
         TODO("Not yet implemented")
@@ -22,22 +24,65 @@ class CoursesRepositoryImpl @Inject constructor(
     }
 
     override fun getCoursesAsFlow(): Flow<CoursesResult?> {
-        return coursesCombinedSelectorRepository.getCoursesAsFlow().map {
-            it?.let { preResult ->
-                if (preResult is CoursesResult.Retrieved) savedCoursesRepository.updateCourses(preResult.courses)
-                if (preResult is CoursesResult.Error) savedCoursesRepository.getCourses() else preResult
+        return combine(
+            coursesCombinedSelectorRepository.getCoursesAsFlow(),
+            savedCoursesRepository.getCoursesAsFlow()
+        ) { combinedResult, localResult ->
+            when (combinedResult) {
+                is CoursesResult.Retrieved -> {
+                    savedCoursesRepository.updateCourses(combinedResult.courses)
+                    combinedResult
+                }
+
+                is CoursesResult.Error -> localResult
+                else -> combinedResult
+            }
+        }.run{
+            combine(
+                this,
+                favoriteCoursesRepository.getFavoriteCoursesAsFlow()
+            ) { preResult, favoriteCourses ->
+                when(preResult) {
+                    is CoursesResult.Retrieved -> {
+                        preResult.copy(courses = preResult.courses.map { course ->
+                            course.copy(hasLike = favoriteCourses.contains(course.id))
+                        })
+                    }
+                    is CoursesResult.Cached -> {
+                        preResult.copy(courses = preResult.courses.map { course ->
+                            course.copy(hasLike = favoriteCourses.contains(course.id))
+                        })
+                    }
+
+                    else -> preResult
+                }
             }
         }
     }
 
     override suspend fun getCourses(): CoursesResult {
-        val preResult = coursesCombinedSelectorRepository.getCourses()
-        if (preResult is CoursesResult.Retrieved) savedCoursesRepository.updateCourses(preResult.courses)
-        return if (preResult is CoursesResult.Error) {
+        val retrieved = coursesCombinedSelectorRepository.getCourses()
+        if (retrieved is CoursesResult.Retrieved) savedCoursesRepository.updateCourses(retrieved.courses)
+        val preResult = if (retrieved is CoursesResult.Error) {
             savedCoursesRepository.getCourses()
         } else {
-            preResult
+            retrieved
         }
-    }
+        val favoriteCourses = favoriteCoursesRepository.getFavoriteCourses()
 
+        val result = when(preResult) {
+            is CoursesResult.Retrieved -> {
+                preResult.copy(courses = preResult.courses.map { course ->
+                    course.copy(hasLike = favoriteCourses.contains(course.id))
+                })
+            }
+            is CoursesResult.Cached -> {
+                preResult.copy(courses = preResult.courses.map { course ->
+                    course.copy(hasLike = favoriteCourses.contains(course.id))
+                })
+            }
+            else -> preResult
+        }
+        return result
+    }
 }

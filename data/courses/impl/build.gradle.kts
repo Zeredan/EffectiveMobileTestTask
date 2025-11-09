@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "test.task.effectivemobile.impl"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -38,6 +38,7 @@ android {
 
 dependencies {
     implementation(project(":domain:courses"))
+    implementation(project(":domain:courses_favorite"))
     implementation(project(":data:courses:impl:local"))
     implementation(project(":data:courses:impl:remote:ktor"))
     implementation(project(":data:courses:impl:remote:retrofit"))

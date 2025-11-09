@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "test.task.effectivemobile.combined_selector"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
