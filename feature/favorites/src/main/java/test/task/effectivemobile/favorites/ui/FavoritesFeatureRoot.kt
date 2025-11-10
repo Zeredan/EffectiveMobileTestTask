@@ -58,6 +58,7 @@ fun FavoritesFeatureRoot(
         ) {
             Spacer(Modifier.height(16.dp))
             Text(
+                modifier = Modifier.align(Alignment.Start),
                 text = stringResource(R.string.favorite),
                 fontSize = 22.sp,
                 lineHeight = 28.sp,
@@ -74,7 +75,7 @@ fun FavoritesFeatureRoot(
             ) {
                 items(coursesList) { course ->
                     CourseCard(
-                        imageURL = Uri.parse(course.imageUri),
+                        imageUri = course.imageUri?.let{ Uri.parse(it) },
                         title = course.title,
                         text = course.text,
                         price = course.price,

@@ -27,6 +27,6 @@ class CourseDTO(
     )
     
     fun toCourse() : Course {
-        return Course(id, title, "https://eu-images.contentstack.com/v3/assets/blt07f68461ccd75245/blt09a2ac83e51a0e06/661ce198092eb8747525079e/programming_20evolution.jpg", text, price, rate, startDate, hasLike, publishDate)
+        return Course(id, title, null, text, price, rate, startDate, hasLike, publishDate)
     }
 }

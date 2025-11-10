@@ -154,7 +154,7 @@ fun MainFeatureRoot(
                 ) {
                     items(coursesList) { course ->
                         CourseCard(
-                            imageURL = Uri.parse(course.imageUri),//Uri.parse("https://game-tournaments.com/media/news/n24430.jpeg"),
+                            imageUri = course.imageUri?.let{ Uri.parse(it) },
                             title = course.title,
                             text = course.text,
                             price = course.price,

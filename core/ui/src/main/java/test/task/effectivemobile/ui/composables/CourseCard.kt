@@ -40,7 +40,7 @@ import test.task.effectivemobile.ui.themes.EffectiveMobileThemeManager
 @Composable
 fun CourseCard(
     modifier: Modifier = Modifier,
-    imageURL: Uri,
+    imageUri: Uri?,
     title: String,
     text: String,
     price: String,
@@ -67,13 +67,22 @@ fun CourseCard(
                 .height(114.dp)
                 .clip(RoundedCornerShape(12.dp))
         ) {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxSize(),
-                model = imageURL,
-                contentScale = ContentScale.FillWidth,
-                contentDescription = null,
-            )
+            if (imageUri != null) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    model = imageUri,
+                    contentScale = ContentScale.FillWidth,
+                    contentDescription = null,
+                )
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.image_placeholder),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.FillWidth
+                )
+            }
             Box(
                 modifier = Modifier
                     .padding(8.dp)
