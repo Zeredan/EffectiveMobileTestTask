@@ -29,6 +29,10 @@ class CoursesRepositorySavedImpl @Inject constructor(
         }
     }
 
+    override suspend fun reloadCourses() {
+        TODO("Not yet implemented")
+    }
+
     override fun getCoursesAsFlow(): Flow<CoursesResult?> {
         return coursesDAO.getAllCoursesAsFlow().map { lst ->
             CoursesResult.Cached(lst.map { it.toCourse() })

@@ -7,7 +7,10 @@ import io.ktor.client.request.request
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import test.task.effectivemobile.courses.Course
 import test.task.effectivemobile.courses.CoursesResult
 import test.task.effectivemobile.courses.repositories.CoursesRepository
@@ -20,6 +23,8 @@ class CoursesRepositoryRemoteKtorImpl @Inject constructor(
     private val httpClient: HttpClient
 ) : CoursesRepository {
     private val gson = Gson()
+    private val reloadTrigger = MutableSharedFlow<CoursesResult?>()
+
     override suspend fun addNewCourse(course: Course) {
         TODO("Not yet implemented")
     }
@@ -28,10 +33,13 @@ class CoursesRepositoryRemoteKtorImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun reloadCourses() {
+        reloadTrigger.emit(getCourses())
+    }
+
     override fun getCoursesAsFlow(): Flow<CoursesResult?> {
-        return flow{
-            emit(getCourses())
-        }
+        return reloadTrigger
+            .onStart { emit(getCourses()) }
     }
 
     override suspend fun getCourses(): CoursesResult {

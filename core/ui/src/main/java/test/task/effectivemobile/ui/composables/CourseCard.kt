@@ -203,7 +203,7 @@ fun RTR(
                         lineHeight = 16.sp,
                         color = colorResource(colorScheme.mainTextSpecial),
                         fontFamily = robotoFontFamily,
-                        fontWeight = FontWeight.W500,
+                        fontWeight = FontWeight.W600,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )

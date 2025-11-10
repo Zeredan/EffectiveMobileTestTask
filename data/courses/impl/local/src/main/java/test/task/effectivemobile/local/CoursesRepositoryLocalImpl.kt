@@ -4,7 +4,9 @@ import android.content.Context
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import test.task.effectivemobile.courses.Course
 import test.task.effectivemobile.courses.CoursesResult
 import test.task.effectivemobile.courses.repositories.CoursesRepository
@@ -18,6 +20,8 @@ class CoursesRepositoryLocalImpl @Inject constructor(
     private val gson = Gson()
     private var cachedCourses: List<Course>? = null
 
+    private val reloadTrigger = MutableSharedFlow<CoursesResult?>()
+
     override suspend fun addNewCourse(course: Course) {
         TODO("Not yet implemented")
     }
@@ -26,10 +30,15 @@ class CoursesRepositoryLocalImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun reloadCourses() {
+        reloadTrigger.emit(getCourses())
+    }
+
     override fun getCoursesAsFlow(): Flow<CoursesResult?> {
-        return flow {
-            emit(getCourses())
-        }
+        return reloadTrigger
+            .onStart {
+                reloadTrigger.emit(getCourses())
+            }
     }
 
     override suspend fun getCourses(): CoursesResult {

@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import test.task.effectivemobile.courses.CoursesResult
 import test.task.effectivemobile.courses.repositories.CoursesRepository
 import test.task.effectivemobile.courses.usecases.UCGetCoursesAsFlow
+import test.task.effectivemobile.courses.usecases.UCReloadCourses
 import test.task.effectivemobile.courses_favorite.repositories.repositories.FavoriteCoursesRepository
 import test.task.effectivemobile.courses_favorite.repositories.usecases.UCAddToFavorites
 import test.task.effectivemobile.courses_favorite.repositories.usecases.UCRemoveFromFavorites
@@ -22,10 +23,14 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val ucGetCoursesAsFlow: UCGetCoursesAsFlow,
     private val ucAddToFavorites: UCAddToFavorites,
-    private val ucRemoveFromFavorites: UCRemoveFromFavorites
+    private val ucRemoveFromFavorites: UCRemoveFromFavorites,
+    private val ucReloadCourses: UCReloadCourses
 ) : ViewModel(){
     val courses = ucGetCoursesAsFlow()
         .stateIn(viewModelScope, SharingStarted.Companion.Eagerly, null)
+
+    private val _isReloading = MutableStateFlow(false)
+    val isReloading = _isReloading.asStateFlow()
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
@@ -57,7 +62,13 @@ class MainViewModel @Inject constructor(
                 false -> true
             }
     }
-
+    fun reloadCourses() {
+        viewModelScope.launch {
+            _isReloading.value = true
+            ucReloadCourses()
+            _isReloading.value = false
+        }
+    }
     fun setSearchText(text: String) {
         _searchText.value = text
     }

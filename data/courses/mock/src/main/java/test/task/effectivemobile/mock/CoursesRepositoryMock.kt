@@ -24,6 +24,10 @@ class CoursesRepositoryMock @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun reloadCourses() {
+        TODO("Not yet implemented")
+    }
+
     override fun getCoursesAsFlow(): Flow<CoursesResult> {
         return flow{
             emit(

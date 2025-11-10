@@ -77,6 +77,17 @@ class CoursesRepositoryCombinedSelectorImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun reloadCourses() {
+        if (settingsRepository.getIsLocalModeAsFlow().first()) {
+            localImpl.reloadCourses()
+        } else {
+            when (settingsRepository.getPreferredRemoteModeAsFlow().first()) {
+                RemoteMode.KTOR -> remoteKtorImpl.reloadCourses()
+                RemoteMode.RETROFIT -> remoteRetrofitImpl.reloadCourses()
+            }
+        }
+    }
+
     override fun getCoursesAsFlow(): Flow<CoursesResult?> {
         return resultingCoursesFlow
     }

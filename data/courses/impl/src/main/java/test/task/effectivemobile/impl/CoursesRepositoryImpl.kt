@@ -23,6 +23,10 @@ class CoursesRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun reloadCourses() {
+        coursesCombinedSelectorRepository.reloadCourses()
+    }
+
     override fun getCoursesAsFlow(): Flow<CoursesResult?> {
         return combine(
             coursesCombinedSelectorRepository.getCoursesAsFlow(),

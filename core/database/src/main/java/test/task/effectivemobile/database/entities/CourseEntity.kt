@@ -8,6 +8,7 @@ data class CourseEntity(
     @PrimaryKey
     val id: Int,
     val title: String,
+    val imageUri: String,
     val text: String,
     val price: String,
     val rate: String,

@@ -84,7 +84,7 @@ fun FavoritesFeatureRoot(
             ) {
                 items(coursesList) { course ->
                     RTR(
-                        imageURL = Uri.parse("https://game-tournaments.com/media/news/n24430.jpeg"),
+                        imageURL = Uri.parse(course.imageUri),
                         title = course.title,
                         text = course.text,
                         price = course.price,
