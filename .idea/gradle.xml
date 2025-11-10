@@ -40,6 +40,8 @@
             <option value="$PROJECT_DIR$/domain/courses_favorite" />
             <option value="$PROJECT_DIR$/domain/settings" />
             <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/account" />
+            <option value="$PROJECT_DIR$/feature/favorites" />
             <option value="$PROJECT_DIR$/feature/login" />
             <option value="$PROJECT_DIR$/feature/main" />
             <option value="$PROJECT_DIR$/feature/settings" />
