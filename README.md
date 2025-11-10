@@ -22,12 +22,8 @@ DI, MVVM*
 ---
 
 ## 🎬 Демо-Видео
-
-> *(Здесь размести YouTube-ссылку или gif, когда появятся)*
 >
-> [![Watch the demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://youtu.be/YOUR_VIDEO_ID)
->
-> ![Demo GIF](assets/demo.gif)
+https://www.youtube.com/shorts/y7piMs-MARw
 
 ---
 
