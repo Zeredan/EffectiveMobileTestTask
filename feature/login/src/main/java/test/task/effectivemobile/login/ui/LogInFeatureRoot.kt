@@ -131,7 +131,8 @@ fun LogInFeatureRoot(
                 modifier = Modifier.fillMaxWidth(),
                 value = password,
                 onValueChange = { vm.setPassword(it) },
-                placeholder = stringResource(R.string.password_placeholder)
+                placeholder = stringResource(R.string.password_placeholder),
+                hideSymbol = '*'
             )
             Spacer(Modifier.height(24.dp))
             Box(

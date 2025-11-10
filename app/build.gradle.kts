@@ -41,7 +41,15 @@ android {
     buildFeatures {
         compose = true
     }
-
+    flavorDimensions += "courses"
+    productFlavors {
+        create("real") {
+            dimension = "courses"
+        }
+        create("mock") {
+            dimension = "courses"
+        }
+    }
 }
 
 dependencies {
@@ -57,8 +65,19 @@ dependencies {
     implementation(project(":domain:settings"))
 
     implementation(project(":data:settings:impl"))
-    implementation(project(":data:courses:impl"))
     implementation(project(":data:courses_favorite:impl"))
+
+    val flavorName = project.gradle.startParameter.taskNames.joinToString().let {
+        when {
+            it.contains("Mock", ignoreCase = true) -> "mock"
+            it.contains("Real", ignoreCase = true) -> "real"
+            else -> "real" // По умолчанию реальный
+        }
+    }
+    when (flavorName) {
+        "mock" -> implementation(project(":data:courses:mock"))
+        "real" -> implementation(project(":data:courses:impl"))
+    }
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

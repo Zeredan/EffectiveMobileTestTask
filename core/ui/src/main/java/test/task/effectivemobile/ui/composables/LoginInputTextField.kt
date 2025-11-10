@@ -19,6 +19,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import test.task.effectivemobile.ui.R
@@ -29,7 +31,8 @@ fun LoginInputTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String
+    placeholder: String,
+    hideSymbol: Char? = null
 ) {
     val colorScheme by EffectiveMobileThemeManager.colorScheme.collectAsState()
     val robotoFontFamily = EffectiveMobileThemeManager.RobotoFontFamily()
@@ -46,6 +49,7 @@ fun LoginInputTextField(
             onValueChange = onValueChange,
             textStyle = TextStyle(fontSize = 15.sp, color = colorResource(colorScheme.textTextField)),
             cursorBrush = SolidColor(colorResource(colorScheme.textTextField)),
+            visualTransformation = if (hideSymbol != null) PasswordVisualTransformation(hideSymbol) else VisualTransformation.None,
             modifier = Modifier.fillMaxSize()
         )
         if (value.isEmpty()) {

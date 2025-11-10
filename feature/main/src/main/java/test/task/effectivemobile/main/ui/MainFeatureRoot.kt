@@ -18,10 +18,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -41,14 +39,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.first
 import test.task.effectivemobile.courses.Course
-import test.task.effectivemobile.courses.CoursesResult
 import test.task.effectivemobile.main.MainViewModel
 import test.task.effectivemobile.ui.composables.NavigationMenu
 import test.task.effectivemobile.ui.themes.EffectiveMobileThemeManager
 import test.task.effectivemobile.ui.R
-import test.task.effectivemobile.ui.composables.RTR
+import test.task.effectivemobile.ui.composables.CourseCard
 import test.task.effectivemobile.ui.composables.SearchTextField
-import java.net.URL
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -157,7 +153,7 @@ fun MainFeatureRoot(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(coursesList) { course ->
-                        RTR(
+                        CourseCard(
                             imageURL = Uri.parse(course.imageUri),//Uri.parse("https://game-tournaments.com/media/news/n24430.jpeg"),
                             title = course.title,
                             text = course.text,

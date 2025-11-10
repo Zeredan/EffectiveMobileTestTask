@@ -13,7 +13,7 @@ class CoursesRepositoryMock @Inject constructor(
 
 ) : CoursesRepository {
     private val constList = listOf(
-        Course(1, "qwe", "ere", "12", "5", "0301", true, "0303")
+        Course(1, "qwe", "", "ere", "12", "5", "0301", true, "0303")
     )
 
     override suspend fun addNewCourse(course: Course) {
