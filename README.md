@@ -1,6 +1,6 @@
 # Effective Courses (Android, Clean Architectured Multimodule Demo)
 
-*Junior-level и выше | Современный Android стек: Jetpack Compose, Ktor, Retrofit, Room, DataStore,
+*Middle-level и выше | Современный Android стек: Jetpack Compose, Ktor, Retrofit, Room, DataStore,
 DI, MVVM*
 
 ---
